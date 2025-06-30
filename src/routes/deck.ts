@@ -167,10 +167,14 @@ deckRouter.get('/get', async (req: Request, res: Response) => {
                 user: req.user
             },
             include: {
-                cards: true
+                cards: {
+                    include: {
+                        card: true
+                    }
+                }
             }
         })
-        res.status(200).json({ "decks": decks });
+        res.status(200).json(decks);
     }
     catch (e) {
         res.status(400).send(e);
