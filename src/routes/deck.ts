@@ -146,7 +146,7 @@ deckRouter.post('/remove', authenticateJWT, async (req: Request, res: Response) 
     }
 });
 
-deckRouter.post('/delete', async (req: Request, res: Response) => {
+deckRouter.post('/delete', authenticateJWT, async (req: Request, res: Response) => {
     try {
         const deck = await prisma.deck.delete({
             where: {
@@ -162,9 +162,26 @@ deckRouter.post('/delete', async (req: Request, res: Response) => {
 
 deckRouter.get('/get', async (req: Request, res: Response) => {
     try {
+        const decks = await prisma.deck.findMany({
+            where: {
+                user: req.user
+            },
+            include: {
+                cards: true
+            }
+        })
+        res.status(200).json({ "decks": decks });
+    }
+    catch (e) {
+        res.status(400).send(e);
+    }
+});
+
+deckRouter.get('/get/:id', async (req: Request, res: Response) => {
+    try {
         const deck = await prisma.deck.findUniqueOrThrow({
             where: {
-                id: req.body.id
+                id: parseInt(req.params.id)
             },
             include: {
                 cards: true
