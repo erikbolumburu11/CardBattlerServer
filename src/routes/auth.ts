@@ -30,10 +30,23 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
 authRouter.get('/status', authenticateJWT, (req: Request, res: Response) => {
     if(req.user){
-        res.status(200).send("Logged in as: " + req.user.username);
+        res.status(200).send({"loggedIn": true});
     }
     else{
-        res.status(401).send("Not Authenticated");
+        res.status(401).send({"loggedIn": false});
+    }
+});
+
+authRouter.get('/userdata', authenticateJWT, (req: Request, res: Response) => {
+    if(req.user){
+        const { username, email } = req.user;
+        res.status(200).json({
+            username,
+            email
+        });
+    }
+    else{
+        res.status(401).send("Not logged in.");
     }
 });
 

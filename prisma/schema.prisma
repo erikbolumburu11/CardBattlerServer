@@ -16,4 +16,40 @@ model User {
   email     String  @unique
   username  String  @unique
   password  String?
+  admin     Boolean @default(false)
+
+  decks     Deck[]
+}
+
+model Deck {
+  id        Int     @id @default(autoincrement())
+  name      String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+
+  cards DeckCard[]
+}
+
+model Card {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  damage    Int
+  health    Int
+  image     String  // CDN URL
+
+  inDecks DeckCard[]
+}
+
+model DeckCard {
+  id        Int     @id @default(autoincrement())
+
+  deck      Deck    @relation(fields: [deckId], references: [id])
+  deckId    Int
+
+  card      Card    @relation(fields: [cardId], references: [id])
+  cardId    Int
+
+  quantity  Int     @default(1)
+
+  @@unique([deckId, cardId])
 }
