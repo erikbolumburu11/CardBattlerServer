@@ -153,7 +153,7 @@ deckRouter.post('/delete', authenticateJWT, async (req: Request, res: Response) 
                 id: req.body.id
             }
         })
-        res.status(200).send(`${deck.name} Deleted Successfully`);
+        res.status(200).send({response:`${deck.name} Deleted Successfully`});
     }
     catch (e) {
         res.status(400).send(e);
